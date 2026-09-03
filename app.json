@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Pockets",
+    "slug": "pockets",
+    "icon": "./assets/pockets_icon.jpg",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#E7E9EC",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.yourname.pockets",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.yourname.pockets",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/pockets_icon.jpg",
+        "backgroundColor": "#E7E9EC"
+      }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#171C24"
+        }
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-secure-store",
+      "expo-web-browser",
+      "react-native-quick-crypto"
+    ],
+    "extra": {
+      "backendUrl": "http://192.168.88.36:4000",
+      "eas": {
+        "projectId": "9d40f0cc-5448-48b3-84e4-4a7730697d85"
+      }
+    }
+  }
+}

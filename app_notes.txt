@@ -1,0 +1,13 @@
+new features :
+- custom finance scores every 3 months,6 months, year
+- types of transactions, normal and credit card
+- credit card bill remainders 
+- balance check every month
+- categorization of expenses(optional, or include an AI model which categorizes the expense)
+- take the transaction reciept and generate transactions
+- transactions have transaction id,date and time additional
+- when deleting an extracted transaction, a pocket ditribution should be done to add or remove money
+to do :
+- add an icon
+- add animations
+- add a theme
