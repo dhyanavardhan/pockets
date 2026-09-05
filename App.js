@@ -5,6 +5,7 @@ import HomePage from './HomePage';
 import {  hasSavedPin } from './src/store';
 import SetupPinScreen from './SetupPinScreen';
 import LoginScreen from './LoginScreen';
+import { isLockSuppressed } from './src/lib/appLock';
 
 // Text glyphs keep the dependency list short. Swap for @expo/vector-icons if
 // you want proper icons.
@@ -31,7 +32,7 @@ export default function App() {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background' || nextAppState === 'inactive') {
+      if ((nextAppState === 'background' || nextAppState === 'inactive') && !isLockSuppressed()) {
         setIsLocked(true);
       }
     });

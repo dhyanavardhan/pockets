@@ -6,6 +6,7 @@ import { Sheet, Btn, T } from './ui';
 import { parseStatementCsv } from '../lib/statement';
 import { decryptAndParseXlsx } from '../lib/xlsxStatement';
 import { getStatementPassword } from '../store';
+import { withLockSuppressed } from '../lib/appLock';
 
 const XLSX_TYPES = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
@@ -20,17 +21,19 @@ const XLSX_TYPES = [
 // tab (StatementImportSheet never asks for it).
 export default function StatementImportSheet({ visible, onClose, onImported }) {
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const uploadStatement = async () => {
     setError('');
-    const picked = await DocumentPicker.getDocumentAsync({
+    const picked = await withLockSuppressed(() => DocumentPicker.getDocumentAsync({
       type: ['text/csv', ...XLSX_TYPES],
       copyToCacheDirectory: true,
-    });
+    }));
     if (picked.canceled) return;
     const asset = picked.assets[0];
     const isXlsx = /\.xlsx?$/i.test(asset.name || '') || XLSX_TYPES.includes(asset.mimeType);
 
+    setLoading(true);
     try {
       if (isXlsx) {
         const password = await getStatementPassword();
@@ -48,11 +51,13 @@ export default function StatementImportSheet({ visible, onClose, onImported }) {
       }
     } catch (e) {
       setError(/password/i.test(e.message || '') ? 'Wrong statement password — update it in the Account tab.' : 'Could not read that file.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Sheet visible={visible} onClose={onClose}>
+    <Sheet visible={visible} onClose={onClose} loading={loading} loadingLabel="Reading statement…">
       <Text style={T.h3}>From a bank statement</Text>
       <Text style={T.hint}>
         Export a CSV or password-protected XLSX statement from your bank's netbanking. You'll review
@@ -60,8 +65,8 @@ export default function StatementImportSheet({ visible, onClose, onImported }) {
       </Text>
 
       <View style={{ flexDirection: 'row', gap: 9, marginTop: 14 }}>
-        <Btn label="Cancel" onPress={onClose} />
-        <Btn label="Choose file" kind="dark" onPress={uploadStatement} />
+        <Btn label="Cancel" onPress={onClose} disabled={loading} />
+        <Btn label="Choose file" kind="dark" onPress={uploadStatement} disabled={loading} />
       </View>
       <Text style={T.err}>{error}</Text>
     </Sheet>

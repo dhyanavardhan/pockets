@@ -5,11 +5,22 @@
 
 const HEADERS = {
   date: ['date', 'txn date', 'transaction date', 'value date'],
-  narration: ['narration', 'description', 'particulars', 'transaction remarks'],
+  narration: ['narration', 'description', 'particulars', 'transaction remarks', 'details'],
   debit: ['debit', 'withdrawal amt', 'withdrawal amt.', 'debit amount'],
   credit: ['credit', 'deposit amt', 'deposit amt.', 'credit amount'],
-  txnId: ['chq/ref no', 'chq/ref no.', 'ref no', 'ref no.', 'txn id', 'transaction id', 'reference number'],
+  txnId: ['chq/ref no', 'chq/ref no.', 'ref no', 'ref no.', 'ref no/cheque no', 'txn id', 'transaction id', 'reference number'],
 };
+
+// UPI narrations bury the actual counterparty inside a delimited string, e.g.
+// "WDL TFR  UPI/DR/881030914441/Shobha N P/YESB/...": the segment right
+// after the numeric reference is the payee/payer name. Pull that out instead
+// of showing the raw narration or a generic label.
+function extractParty(description, dir) {
+  const m = description.match(/\bUPI\/(?:DR|CR)\/\d+\/([^/]+)\//i)
+    || description.match(/\bUPI-(?:DR|CR)-\d+-([^-]+)-/i);
+  if (m) return m[1].trim();
+  return description.slice(0, 40) || (dir === 'out' ? 'Bank debit' : 'Bank credit');
+}
 
 function splitLine(line) {
   // Handles quoted fields containing commas, which plain split(',') breaks on.
@@ -96,7 +107,7 @@ export function parseStatementCsv(text) {
 
     rows.push({
       date, dir, amount,
-      party: description.slice(0, 40) || (dir === 'out' ? 'Bank debit' : 'Bank credit'),
+      party: extractParty(description, dir),
       description,
       txnId,
     });

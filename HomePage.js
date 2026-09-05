@@ -9,7 +9,7 @@ import { StoreProvider, useStore } from './src/store';
 import { requestPermission } from './src/lib/notify';
 import { C } from './src/theme';
 import Header from './src/components/Header';
-import { Sheet, Btn, AmountField } from './src/components/ui';
+import { Sheet, Btn, AmountField, PersonCircleIcon } from './src/components/ui';
 
 import PocketsScreen from './src/screens/PocketsScreen';
 import TransactionsScreen from './src/screens/TransactionsScreen';
@@ -32,7 +32,7 @@ function NavBar() {
     <View style={{ backgroundColor: C.card, borderBottomColor: C.line, borderBottomWidth: 1, paddingHorizontal: 18, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
       <Text style={{ fontSize: 16, fontWeight: '600', color: C.ink }}>Hi, User</Text>
       <Pressable onPress={() => navigation.navigate('AccountPage')}>
-        <Text style={{ fontSize: 24, color: C.ink }}>👤</Text>
+        <PersonCircleIcon size={28} color={C.ink} />
       </Pressable>
     </View>
   );

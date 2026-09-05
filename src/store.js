@@ -32,9 +32,6 @@ async function hasSavedPin(){
 async function verifyPin(pin){
   const hashed = await hashPin(pin);
   const savedHashed = await SecureStore.getItemAsync(PIN);
-  console.log('Input hash:', hashed);
-  console.log('Saved hash:', savedHashed);
-  console.log('Match:', hashed === savedHashed);
   return hashed === savedHashed;
 }
 
@@ -281,7 +278,7 @@ export function StoreProvider({ children }) {
           dir: r.dir, party: r.party, amount: r.amount,
           at: new Date(r.date + 'T12:00:00').getTime(),
           splits: [{ id: 'normal', name: 'Normal savings', color: '#8A929C', amount: r.amount }],
-          txnId: r.txnId || null, description: r.description || '', source: 'bank',
+          txnId: r.txnId || null, description: '', source: 'bank',
         });
       });
       return s;

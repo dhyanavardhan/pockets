@@ -4,9 +4,13 @@
 
 const clean = q => Math.abs(q * 100 - Math.round(q * 100)) < 1e-9;
 
-export function shorten(n) {
+// minShorten: smallest magnitude that's allowed to shorten at all. Callers
+// that want the full number spelled out until some larger cutoff (e.g. the
+// header balance, kept exact below 10 crore) can raise it past the default.
+export function shorten(n, minShorten = 1e3) {
   const a = Math.abs(n);
   const full = () => a.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  if (a < minShorten) return full();
   let u, s;
   if (a >= 1e7) { u = 1e7; s = 'Cr'; }
   else if (a >= 1e5) { u = 1e5; s = 'L'; }
@@ -17,9 +21,9 @@ export function shorten(n) {
   return full();
 }
 
-export const money = n => (n < 0 ? '-₹' : '₹') + shorten(n);
+export const money = (n, minShorten) => (n < 0 ? '-₹' : '₹') + shorten(n, minShorten);
 export const exact = n => (n < 0 ? '-₹' : '₹') + Math.abs(n).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-export const alt = n => (money(n) === exact(n) ? '' : exact(n));
+export const alt = (n, minShorten) => (money(n, minShorten) === exact(n) ? '' : exact(n));
 
 export const UNITS = [
   { v: 1, l: 'Rupees' },

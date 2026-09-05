@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pockets",
     "slug": "pockets",
-    "icon": "./assets/pockets_icon.jpg",
+    "icon": "./assets/pockets-icon.jpg",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -19,7 +19,7 @@
     "android": {
       "package": "com.yourname.pockets",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/pockets_icon.jpg",
+        "foregroundImage": "./assets/pockets-icon.jpg",
         "backgroundColor": "#E7E9EC"
       }
     },
